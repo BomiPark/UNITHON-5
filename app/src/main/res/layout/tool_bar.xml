@@ -7,15 +7,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="3dp"
         android:orientation="horizontal">
 
     <EditText
-        android:layout_width="300dp"
+        android:layout_width="270dp"
         android:layout_height="wrap_content"
         android:background="@null"
+        android:paddingLeft="40dp"
         android:id="@+id/search"
-        android:hint=" "/>
+        android:hint="dddd "/>
 
     <ImageView
         android:layout_width="20dp"

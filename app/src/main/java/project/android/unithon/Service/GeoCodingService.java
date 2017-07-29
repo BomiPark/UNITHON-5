@@ -17,9 +17,9 @@ public class GeoCodingService {
 
     Geocoder geoCoder;
 
-    public Geocoder get(Context context){
-        geoCoder = new Geocoder(context);
-        return geoCoder; //todo 생성해서써야할듯
+    public Geocoder get(Geocoder geo){
+        geoCoder = geo;
+        return geoCoder;
     }
 
     public LatLng getLatLng(String address){

@@ -75,9 +75,9 @@ public class MainActivity extends AppCompatActivity implements NationalWeatherFr
     }
 
     LatXLngY getLatXLngY(){
-        LatLng latLng = new LatLng(0,0);
+        LatLng latLng;
+        LatXLngY lat;
         latLng = locationListener.getLocation();
-        LatXLngY lat = new LatXLngY();
         lat = LatticeChangeService.get().convertGRID_GPS(0, latLng.latitude, latLng.longitude);
         return lat;
     }

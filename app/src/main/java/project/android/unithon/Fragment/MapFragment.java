@@ -1,7 +1,12 @@
 package project.android.unithon.Fragment;
 
+import android.app.Activity;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.InflateException;
 import android.view.LayoutInflater;
@@ -10,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import project.android.unithon.Model.LatXLngY;
+import project.android.unithon.Model.MarkerItem;
 import project.android.unithon.R;
 import project.android.unithon.Service.LatticeChangeService;
 import project.android.unithon.Service.LocationListener;
@@ -19,9 +25,12 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MapFragment extends Fragment{
+import java.util.ArrayList;
+
+public class MapFragment extends Fragment implements GoogleMap.InfoWindowAdapter{
 
     GoogleMap googleMap;
     static View view;
@@ -33,6 +42,12 @@ public class MapFragment extends Fragment{
 
     LocationListener locationListener;
     MarkerOptions markerOptions;
+    View markerWindowView;
+
+    ArrayList<MarkerItem> items;
+
+    Marker marker;
+    MarkerOptions options;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -41,6 +56,9 @@ public class MapFragment extends Fragment{
         catch (InflateException e){}
 
         locationListener = new LocationListener(getActivity());
+        items = new ArrayList<MarkerItem>();
+
+        getData();
 
         com.google.android.gms.maps.MapFragment mapFragment = (com.google.android.gms.maps.MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(mapReadyCallback);
@@ -65,7 +83,7 @@ public class MapFragment extends Fragment{
 
             googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                 @Override
-                public void onMapClick(LatLng latLng){ //todo 좌표 변환 test
+                public void onMapClick(LatLng latLng){ //todo 삭제
                     change(latLng);
                 }
             });
@@ -97,10 +115,33 @@ public class MapFragment extends Fragment{
 
     public void change(LatLng latLng){
 
-        LatXLngY lat = new LatXLngY();
-        lat = LatticeChangeService.get().convertGRID_GPS(0, latLng.latitude, latLng.longitude);
+        LatXLngY lat = LatticeChangeService.get().convertGRID_GPS(0, latLng.latitude, latLng.longitude);
     }
 
+    public void getData(){
+
+        items.add(new MarkerItem("서울시 중랑구",1,2, 37.538523, 126.96568));
+        items.add(new MarkerItem("서울시 중랑구2",1,2, 37.527523, 126.96568));
+        items.add(new MarkerItem("서울시 중랑구3",1,2, 37.549523, 126.96568));
+        items.add(new MarkerItem("서울시 중랑구4",1,2, 37.538523, 126.95768));
+
+        options = new MarkerOptions();
+
+        for (MarkerItem item : items) {
+            options.title(item.getAddress());
+            options.position(new LatLng(item.getLat(), item.getLon()));
+            switch (item.getReal()){
+                case 0 : marker = googleMap.addMarker(markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.stroke_3)));
+                    break;
+            }
+        }
+    }
+
+    public void setMarker(){
+
+        markerWindowView = getActivity().getLayoutInflater().inflate(R.layout.marker_window, null); // 마커윈도우
+        //todo 객체들 찾아
+    }
 
 
     @Override
@@ -114,4 +155,14 @@ public class MapFragment extends Fragment{
         }
     }
 
+
+    @Override
+    public View getInfoWindow(Marker marker) { // 먼저 호출 null 이 반환되면 getInfoContent메소드 호출
+        return null;
+    }
+
+    @Override
+    public View getInfoContents(Marker marker) { // 여기서도 null이 반환되면 기본 정보창 반환
+        return null;
+    }
 }
