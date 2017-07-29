@@ -14,6 +14,8 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -21,7 +23,10 @@ import project.android.unithon.Fragment.CameraFragment;
 import project.android.unithon.Fragment.OpinionFragment;
 import project.android.unithon.Fragment.IconSelectFragment;
 import project.android.unithon.Fragment.NationalWeatherFragment;
+import project.android.unithon.Model.LatXLngY;
 import project.android.unithon.R;
+import project.android.unithon.Service.LatticeChangeService;
+import project.android.unithon.Service.LocationListener;
 
 public class MainActivity extends AppCompatActivity implements NationalWeatherFragment.OnFragmentInteractionListener, CameraFragment.OnFragmentInteractionListener
         , IconSelectFragment.OnFragmentInteractionListener, OpinionFragment.OnFragmentInteractionListener{
@@ -36,6 +41,9 @@ public class MainActivity extends AppCompatActivity implements NationalWeatherFr
     @BindView(R.id.fab_call_icon_select_fragment)
     FloatingActionButton fabCallIconSelectFragment;
     private Animation fab_open, fab_close, rotate_forward, rotate_backward;
+    LocationListener locationListener;
+
+    LatXLngY currentPosition;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,6 +51,12 @@ public class MainActivity extends AppCompatActivity implements NationalWeatherFr
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        locationListener = new LocationListener(this);
+
+        currentPosition = new LatXLngY();
+        currentPosition = getLatXLngY();
+
+        Toast.makeText(this, "x=" + currentPosition.x + "  y=" + currentPosition.y , Toast.LENGTH_LONG).show();
 //        Fragment upContent = null;
 //        FragmentTransaction nationalWeatherFragmentTransaction = getSupportFragmentManager().beginTransaction();
 //        upContent = NationalWeatherFragment.newInstance(); // 위도, 경도 인자로 넘기기 <-- BackgroundService
@@ -58,6 +72,14 @@ public class MainActivity extends AppCompatActivity implements NationalWeatherFr
     @OnClick(R.id.fab_main) void onClickFabFloatingButton(){
         Log.d(TAG, "onClickFabFloatingButton() 메인 플로팅 버튼 이벤트 발생");
         animateFabOpening();
+    }
+
+    LatXLngY getLatXLngY(){
+        LatLng latLng = new LatLng(0,0);
+        latLng = locationListener.getLocation();
+        LatXLngY lat = new LatXLngY();
+        lat = LatticeChangeService.get().convertGRID_GPS(0, latLng.latitude, latLng.longitude);
+        return lat;
     }
 
     @OnClick(R.id.fab_call_camera_fragment) void onClickFabCallCameraFloatingButton(){

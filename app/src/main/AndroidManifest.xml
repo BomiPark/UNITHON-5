@@ -21,13 +21,13 @@
         <activity android:name=".Activity.MapActivity" >
         </activity>
         <activity android:name=".Activity.MainActivity">
-        </activity>
-        <activity android:name=".Activity.LoadingActivity" />
-        <activity android:name=".Activity.ListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".Activity.LoadingActivity" />
+        <activity android:name=".Activity.ListActivity">
         </activity>
     </application>
 

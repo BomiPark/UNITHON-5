@@ -10,6 +10,8 @@ import android.support.v4.app.ActivityCompat;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import project.android.unithon.Model.LatXLngY;
+
 public class LocationListener {
 
     private LocationManager locManager;
@@ -80,7 +82,15 @@ public class LocationListener {
             stopLocationService();
             return currentLoc;
         }        else
-            return new LatLng(37.4015984, 127.1087813);
+            return new LatLng(37.5804580, 126.8895390);
     }
 
+    public LatXLngY getLatXLngY(LatLng latLng) {
+        if (set == 1) {
+            LatXLngY lat = new LatXLngY();
+            lat = LatticeChangeService.get().convertGRID_GPS(0, latLng.latitude, latLng.longitude);
+            return lat;
+        }
+        return LatticeChangeService.get().convertGRID_GPS(0, 37.5804580,  126.8895390);
+    }
 }
